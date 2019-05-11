@@ -1,4 +1,4 @@
-from models import Suits, Ranks, Hands
+from models import Deck, Suits, Ranks, Hands
 
 
 class Hand:
@@ -13,37 +13,50 @@ class Hand:
 
         self.validate()
 
+    def __repr__(self):
+        return str(self.cards())
+
     def validate(self):
 
         if not 1 == max(map(max, self.hand)):
-            raise ValueError("Invalid hand: redundant card(s)")
+            raise ValueError("Invalid hand: redundant card(s) in hand")
 
         if not 5 == sum(map(sum, self.hand)):
-            raise ValueError("Invalid number of cards in hand {}".format(sum(map(sum, self.hand))))
+            raise ValueError("Invalid number of cards in hand: {}".format(sum(map(sum, self.hand))))
+
+    def cards(self):
+        hand = []
+        for i, rank in enumerate(self.hand):
+            for j, suit in enumerate(rank):
+                if suit:
+                    hand.append(Deck[i][j])
+        return hand
+
+    def high_card(self):
+        return self.cards()[-1:][0]
+
+    def low_card(self):
+        return self.cards()[:1][0]
 
     def identify(self):
 
-        def is_four_of_a_kind(hand):
-            for rank in hand:
-                if 4 == sum(rank):
-                    return True
-            return False
+        def n_of_a_kind(n):
+            def _of_a_kind(hand):
+                for rank in hand:
+                    if n == sum(rank):
+                        return True
+                return False
+            return _of_a_kind
 
-        def is_three_of_a_kind(hand):
-            for rank in hand:
-                if 3 == sum(rank):
-                    return True
-            return False
+        is_four_of_a_kind = n_of_a_kind(4)
 
-        def is_pair(hand):
-            for rank in hand:
-                if 2 == sum(rank):
-                    return True
-            return False
+        is_three_of_a_kind = n_of_a_kind(3)
+
+        is_pair = n_of_a_kind(2)
 
         def is_flush(hand):
             suits = []
-            for rank in self.hand:
+            for rank in hand:
                 for i, suit in enumerate(rank):
                     if suit:
                         suits.append(i)
