@@ -10,13 +10,16 @@ def test_redundant_cards_raises_error():
     with pytest.raises(ValueError):
         Hand(['5H', '6S', '5H', '5H', '6S'])
 
+
 def test_lite_hand_raises_error():
     with pytest.raises(ValueError):
         Hand(['5H', '6H', '7H', '9H'])
 
+
 def test_heavy_hand_raises_error():
     with pytest.raises(ValueError):
         Hand(['5H', '6S', '3H', '5C', '2D', '3S'])
+
 
 def test_straight_flush():
     assert Hands.straight_flush == Hand(['TC', '7C', '9C', 'JC', '8C']).identify()
@@ -52,3 +55,19 @@ def test_two_pair():
 
 def test_one_pair():
     assert Hands.pair == Hand(['KD', 'JC', 'KS', '6D', '2S']).identify()
+
+
+def test_nothing():
+    assert Hands.nothing == Hand(['2C', '4D', '6H', '8S', 'JC']).identify()
+
+
+def test_high_card():
+    assert 'JC' == Hand(['2C', '4D', 'JC', '6H', '8S']).high_card()
+
+
+def test_low_card():
+    assert '2C' == Hand(['4D', '6H', '8S', '2C', 'JC']).low_card()
+
+
+def test_print_hand():
+    print(Hand(['2C', '4D', '6H', '8S', 'JC']))
