@@ -70,4 +70,5 @@ def test_low_card():
 
 
 def test_print_hand():
-    print(Hand(['2C', '4D', '6H', '8S', 'JC']))
+    assert str(['2C', '4D', '6H', '8S', 'JC']) == str(Hand(['2C', '4D', '6H', '8S', 'JC']))
+
