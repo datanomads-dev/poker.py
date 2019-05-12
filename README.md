@@ -126,7 +126,7 @@ Identification of ranking hands is done in order, so for instance full house is 
 
 # Joker
 
-Joker does not fit into the fifty-two card matrix of the data model. Introduction of a joker boolean to the hand object was a straightforward task and added little complexity to the identification functions.
+Joker does not fit into the fifty-two card matrix of the data model. Introduction of a joker boolean to the hand object was a straightforward task and added little complexity to the identification algorithm. This was an easy feature addition which added confidence in the data model.
 
 # TODO
 
