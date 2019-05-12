@@ -44,7 +44,11 @@ Ranks = {
 }
 
 
+Joker = 'O'
+
+
 class Hands(Enum):
+    five_of_a_kind = 9
     straight_flush = 8
     four_of_a_kind = 7
     full_house = 6
