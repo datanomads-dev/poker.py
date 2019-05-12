@@ -1,5 +1,8 @@
 A class-based solution to identifying poker hands.
 
+# Usage
+
+
 ```bash
 (py3) rriehle@ontario:~/src/qumulo/poker.py (joker)$ cat hand.json
 ["5C", "6D", "7H", "8S", "9C"]
@@ -13,6 +16,13 @@ High card: 9C
 Hands.nothing
 Low card: 2C
 High card: JC
+```
+
+# Test coverage
+
+Test names are a hint toward the capabilities of the system.
+
+```bash
 (py3) rriehle@ontario:~/src/qumulo/poker.py (joker)$ python -m pytest -vv tests/
 ===================================================================== test session starts ======================================================================
 platform darwin -- Python 3.7.3, pytest-4.4.1, py-1.8.0, pluggy-0.9.0 -- /Users/brew/.virtualenvs/py3/bin/python
@@ -50,3 +60,74 @@ tests/test_hand.py::test_print_hand PASSED                                      
 (py3) rriehle@ontario:~/src/qumulo/poker.py (joker)$
 ```
 
+# Data Model
+
+Among the most important decisions in the development of tractable, extendable solutions are those around the data model. In other words, this question is key: How should the entities in the domain be represented as data? For the present case I have chosen a matrix with suits (Clubs, Hearts, etc.) across one dimension and ranks (Ace, King, Queen, etc.) along the other. In Python the matrix could take the form of nested tuples or lists, or a Numpy array.
+
+```python
+Deck = (
+    # Clubs, Diamonds, Hearts, Spades
+    ('2C', '2D', '2H', '2S'),
+    ('3C', '3D', '3H', '3S'),
+    ('4C', '4D', '4H', '4S'),
+    ('5C', '5D', '5H', '5S'),
+    ('6C', '6D', '6H', '6S'),
+    ('7C', '7D', '7H', '7S'),
+    ('8C', '8D', '8H', '8S'),
+    ('9C', '9D', '9H', '9S'),  # Nines
+    ('TC', 'TD', 'TH', 'TS'),  # Tens
+    ('JC', 'JD', 'JH', 'JS'),  # Jacks
+    ('QC', 'QD', 'QH', 'QS'),  # Queens
+    ('KC', 'KD', 'KH', 'KS'),  # Kings
+    ('AC', 'AD', 'AH', 'AS'),  # Aces
+)
+```
+
+A straight, which upon being presented as input to the program might look like this:
+
+```json
+["5C", "6D", "7H", "8S", "9C"]
+```
+
+This is the straight above ingested into its internal representation:
+
+```python
+straight = [
+#  C  D  H  Spades
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [1, 0, 0, 0],  # 5
+  [0, 1, 0, 0],  # 6
+  [0, 0, 1, 0],  # 7
+  [0, 0, 0, 1],  # 8
+  [1, 0, 0, 0],  # 9
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+]
+```
+
+# Hand Identification
+
+Once ingested a hand is treated as an immutable object. Functions (or methods) are run across the matrix to make observations about the hand. Three of a kind, for instance, would be detected by the following function.
+
+```python
+def three_of_a_kind(hand):
+    for rank in hand:
+        if 3 == sum(rank):
+            return True
+    return False
+```
+
+Identification of ranking hands is done in order, so for instance full house is tested before three of a kind thereby preventing mis-identification.
+
+# Joker
+
+Joker does not fit into the fifty-two card matrix of the data model. Introduction of a joker boolean to the hand object was a straightforward task and added little complexity to the identification functions.
+
+# TODO
+
+Account for declared wild cards such as "Fours are wild" or "One-eyed Jacks are wild."  One strategy would be to populate the hand matrix with the wild cards along with the rest of the cards. The identification algorithm would require little or no modification. The ingest and extraction methods (```__init__``` and ```__repr__``` respectively) would need consideration.
