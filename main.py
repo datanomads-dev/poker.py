@@ -18,7 +18,11 @@ def main():
     """
 
     for line in stdin:
-        print(json.dumps(str(Hand(json.loads(line)))))
+        hand = Hand(json.loads(line))
+        print(json.dumps(str(hand)))
+        print(hand.identify())
+        print("Low card: {}".format(hand.low_card()))
+        print("High card: {}".format(hand.high_card()))
 
 
 if __name__ == '__main__':
