@@ -83,7 +83,7 @@ Deck = (
 )
 ```
 
-A straight, which upon being presented as input to the program might look like this:
+A straight as input to the program might look like this:
 
 ```json
 ["5C", "6D", "7H", "8S", "9C"]
